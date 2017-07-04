@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Profile</title>
+  	<link href="https://fonts.googleapis.com/css?family=Rationale" rel="stylesheet"> 
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+	<style type="text/css">
+	*{
+		color: white ;
+		font-family: 'Rationale', 'Tahoma'  ;
+	}
+		body{
+			font-family: 'Shadows Into Light', Monospace;
+			margin:30px auto;
+			text-align: center ;
+			background-image: url('/images/bg1.jpeg');
+			background-size: 100% 800px ;
+			background-attachment: fixed; 
+		}
+		 h1{
+			font-size: 26px ;
+		}
+		p{
+			font-size: 20px;
+		}
+		img{
+			margin-top:30px ;
+			border-radius: 8px ;
+		}
+		.imageContainer{
+			border-radius: 4px ;
+		}
+		.name{
+			font-size: 35px ;
+		}
+		span{
+			display: inline;
+			font-size: 30px ;
+			color: cyan ;
+		}
+		.rollno{
+			font-size: 45px ;
+		}
+		.profile_details{
+			font-size: 25px ;
+		}
+	</style>
+</head>
+<body>
+	<div class="imageContainer">
+		<%if(user.image){%>
+		<img src="/serve_image/<%=user.image%>">
+		<%}else{%>
+		<img src="/serve_image/defaultImage.jpg" width="200px"  height="200px">
+		<%}%>
+	</div>
+	<div class="profile_details">
+		<p class="name"><%=user.name%></p>
+		<span class="course"><%=user.course%></span> in <span class="branch"><%= user.branch%></span> department
+		<p class="rollno"><%=user.rollno%></p>
+	</div>
+</body>
+</html>
