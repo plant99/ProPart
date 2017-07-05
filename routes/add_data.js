@@ -2,12 +2,16 @@ var express = require('express') ;
 var router = express.Router() ;
 router.post('/invite', function(req, res, next){
 	var body = req.body ;
+	console.log(req.decoded._doc.image, 'badass')
 	var invite = new Invite({
 		category: body.category,
 		title: body.title,
 		description: body.description,
 		requirements: body.requirements,
-		author: req.decoded._doc.username,
+		author: {
+			name:req.decoded._doc.username,
+			image: req.decoded._doc.image
+		},
 		applicants: []
 	})
 	invite.save(function(err, inviteSaved){
