@@ -34,7 +34,7 @@ body{
 .board{
 	color: white ;
 }
-input, option, select, textarea{
+input, option, select, textarea, button{
 	color: black ;
 	font-size: 22px;
 }
@@ -56,4 +56,27 @@ textarea{
 }
 .invites_container{
   color: white ;
+}
+.invite{
+  padding:20px;
+  border:1px solid grey ;
+  width: 60% ;
+  margin-left: 20% ;
+  margin-top: 20px ;
+}
+.details_container p{
+  font-size: 25px ;
+}
+.required{
+  color: cyan ;
+}
+.invite_header{
+  font-size: 32px;
+  padding: 10px ;
+  border:1px solid grey;
+}
+.invite img{
+  width: 60px ;
+  height: 60px ;
+  border-radius: 50% ;  
 }
