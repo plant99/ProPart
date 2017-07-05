@@ -1,0 +1,59 @@
+body{
+    font-family: 'Shadows Into Light', Monospace;
+    margin:30px auto;
+    text-align: center ;
+    background-image: url('/images/bg1.jpeg');
+    background-size: 100% 100% ;
+    background-attachment: fixed; 
+  }
+ .tab{
+  font-size: 20px ;
+  color: white ;
+  width: 10% ;
+  background-color: grey ;
+  padding: 20px ;
+  float: left;
+  margin-left: 10% ;
+  border-radius: 10% ;
+}
+.tab:hover{
+  cursor: pointer; 
+  color: cyan ;
+  transition-duration: 0.5s ;
+}
+.create{
+  margin-left: 35% ;
+}
+
+.dummy{
+	clear: both; 
+}
+.browse-board{
+	display: none ;
+}
+.board{
+	color: white ;
+}
+input, option, select, textarea{
+	color: black ;
+	font-size: 22px;
+}
+textarea{
+	border-radius: 5px;
+	resize: none ;
+	width: 250px;
+	height: 150px ;
+}
+.messageInternal, .message{
+	color: white ;
+	font-size: 25px ;
+}
+.board h2{
+  width:25%;
+  border:1px solid grey;
+  padding: 10px ;
+  margin-left:37.5%;
+}
+.invites_container{
+  color: white ;
+}
