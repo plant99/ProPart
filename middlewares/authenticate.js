@@ -11,6 +11,12 @@ module.exports = function(req,res,next){
 				})
 			}else{	
 				req.decoded = decoded ;
+				console.log(decoded)
+				console.log(req.decoded._doc.image,'bw1')
+				if(!req.decoded._doc.image){
+					console.log(req.decoded._doc.image,'bw2')
+					req.decoded._doc.image = 'defaultImage.jpg'
+				}
 				next() ;
 			}
 		})
