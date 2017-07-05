@@ -7,6 +7,7 @@ module.exports.initDb = function(){
     db.once('open',function(){
     	console.log('Connected')
     	User = require('../models/User')
+    	Invite = require('../models/Invite')
     })
     
 }
