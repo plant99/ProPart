@@ -6,6 +6,9 @@ module.exports = mongoose.model('invite', new Schema({
 	title: String,
 	description: String,
 	requirements: String,
-	author: String,
+	author: {
+		name:String,
+		image:String
+	},
 	applicants: Array
 }))
