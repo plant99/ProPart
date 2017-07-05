@@ -20,60 +20,64 @@ router.post('/',function(req,res,next){
 	}
 	
 	request(options, function(error, response, body){
-		if(body.success != false){
-			User.findOne({username:req.body.username},function(err, user){
-			if(user){
-				console.log('Rendering with a message')
-				console.log(user)
-				res.render('signup',{message:'User with the same username exists, you might want to login'})
-			}else{
-				if(req.files){
-					console.log(req.files, 'dh')
-					if(req.files.profile_photo){
-						console.log(req.files.profile_photo)
-						sampleFile = req.files.profile_photo ;
-						if(sampleFile){
-							var nameOfImage = sampleFile.name ;
-							var extension = nameOfImage.split('.').pop() ;
-							if(extension === 'jpg' || extension === 'jpeg' || extension === 'png'){
-								sampleFile.mv(__dirname+'/../images/'+ req.body.username +'.'+sampleFile.name.split('.')[1], function(err){
-									if(err){
-										console.log(err)
-									}
-								})
+		if(body){
+			if(body.success != false){
+				User.findOne({username:req.body.username},function(err, user){
+				if(user){
+					console.log('Rendering with a message')
+					console.log(user)
+					res.render('signup',{message:'User with the same username exists, you might want to login'})
+				}else{
+					if(req.files){
+						console.log(req.files, 'dh')
+						if(req.files.profile_photo){
+							console.log(req.files.profile_photo)
+							sampleFile = req.files.profile_photo ;
+							if(sampleFile){
+								var nameOfImage = sampleFile.name ;
+								var extension = nameOfImage.split('.').pop() ;
+								if(extension === 'jpg' || extension === 'jpeg' || extension === 'png'){
+									sampleFile.mv(__dirname+'/../images/'+ req.body.username +'.'+sampleFile.name.split('.')[1], function(err){
+										if(err){
+											console.log(err)
+										}
+									})
+								}
 							}
 						}
 					}
-				}
-				var bcrypt = require('bcrypt');
-				const saltRounds = 10;
-				const myPlaintextPassword = req.body.password;
-				var body = req.body ;
-				bcrypt.hash(myPlaintextPassword, saltRounds, function(err, hash) {
-	  				var user = User({
-	  					name: body.name,
-						course: body.course,
-						branch: body.branch,
-						rollno: body.rollno,
-						username: body.username ,
-						password: hash ,
-						active_invitations: [],
-						image: ''
-	  				})
-	  				if(req.files.profile_photo.name){
-	  					user.image = req.body.username + '.'  + req.files.profile_photo.name.split('.').pop() ;
-	  				}
-					user.save() ;
-					console.log(user)
-				});
+					var bcrypt = require('bcrypt');
+					const saltRounds = 10;
+					const myPlaintextPassword = req.body.password;
+					var body = req.body ;
+					bcrypt.hash(myPlaintextPassword, saltRounds, function(err, hash) {
+		  				var user = User({
+		  					name: body.name,
+							course: body.course,
+							branch: body.branch,
+							rollno: body.rollno,
+							username: body.username ,
+							password: hash ,
+							active_invitations: [],
+							image: ''
+		  				})
+		  				if(req.files.profile_photo.name){
+		  					user.image = req.body.username + '.'  + req.files.profile_photo.name.split('.').pop() ;
+		  				}
+						user.save() ;
+						console.log(user)
+					});
 
-				setTimeout(function(){
-					res.redirect('/login')
-				},1000)
-			 }
-			})
+					setTimeout(function(){
+						res.redirect('/login')
+					},1000)
+				 }
+				})
+			}else{
+				res.render('signup',{message:'Wrong response to captcha'})
+			}
 		}else{
-			res.render('signup',{message:'Wrong response to captcha'})
+			res.render('signup',{message:'Captcha not attempted'})
 		}
 	})
 
