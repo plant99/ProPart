@@ -59,7 +59,8 @@ router.post('/',function(req,res,next){
 							username: body.username ,
 							password: hash ,
 							active_invitations: [],
-							image: ''
+							image: '',
+							applied_invitations: []
 		  				})
 		  				if(req.files.profile_photo.name){
 		  					user.image = req.body.username + '.'  + req.files.profile_photo.name.split('.').pop() ;
