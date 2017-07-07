@@ -9,5 +9,6 @@ module.exports = mongoose.model('user', new Schema({
 	username: String ,
 	password: String ,
 	active_invitations: Array,
-	image: String
+	image: String,
+	applied_invitations: Array
 }))
