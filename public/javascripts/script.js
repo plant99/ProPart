@@ -3,10 +3,15 @@ var $browse = $('.browse')
 var $create_board = $('.create-board')
 var $browse_board = $('.browse-board')
 var $submit = $('.submit')
+var $profiles = $('.profiles') 
+var $profiles_board = $('.profiles-board')
 var invites_container = document.querySelector('.invites_container')
+var invites_applied = document.querySelector('.invites_applied')
+var invites_created = document.querySelector('.invites_created')
 $create.click(function(){
 	$create_board.css('display', 'block')
 	$browse_board.css('display','none')
+	$profiles_board.css('display','none')
 })
 
 $browse.click(function(){
@@ -15,9 +20,34 @@ $browse.click(function(){
 	// load invites after post requests
 	$.get('/get_data/', function(response){
 		var invites = response.invites ;
-		loadInvites(invites, response.user)
+		if(invites){
+			loadInvites(invites, response.user)
+		}
+	})
+	$profiles_board.css('display','none')
+})
+
+$('.profiles').click(function(){
+	$create_board.css('display', 'none')
+	$browse_board.css('display','none')
+	$profiles_board.css('display','block')
+	var id = $profiles_board.attr('profile_id') ;
+	$.get('/get_data/user_applied_invites/'+id, function(response){
+		if(response.success){
+			invites_applied.innerHTML = '' ;
+			invites_applied.innerHTML = '<h1>INVITES APPLIED</h1>'
+			loadAppliedInvites(response.applied_invites,response.user) ;
+		}
+	})
+	$.get('/get_data/user_created_invites/'+id, function(response){
+		if(response.success){
+			invites_created.innerHTML = '' ;
+			invites_created.innerHTML = '<h1>INVITES CREATED</h1>'
+			loadCreatedInvites(response.created_invites,response.user) ;
+		}
 	})
 })
+
 
 //add invite handler
 
@@ -114,8 +144,18 @@ function loadInvites(invites, user){
 							setTimeout(function(){
 								document.querySelector('.invites_container').removeChild(parentElement) ;
 							}, 3000)
+							if($('.invites_container').html() === ''){
+								alert('chutiya')
+							}
 						}else{
-							//add no success handler
+							var p = document.createElement('p') ;
+							p.innerHTML = 'Application was unsuccessful, please try again.' ;
+							p.setAttribute('style','font-size:25px; padding:20px; color: grey;') ;
+							var parentElement = e.target.parentNode ;
+							parentElement.insertBefore(p, parentElement.firstChild) ;
+							setTimeout(function(){
+								parentElement.removeChild(p) ;
+							}, 3000)
 						}
 					})
 				}
@@ -143,3 +183,152 @@ function findIndexOf(object, array){
 	}
 	return true ;
 }
+
+function loadAppliedInvites(invites, user){
+	if(invites.length){
+		for(var i=0;i< invites.length;i++){
+			var inviteApplied = document.createElement('div') ;
+			inviteApplied.setAttribute('id_invite',invites[i]._id) ;
+			inviteApplied.setAttribute('class','inviteApplied') ;
+			var titleName = document.createElement('p') ;
+			titleName.innerHTML = "' "+invites[i].title +" '"+ ' by <br>'
+			var link_to_profile = document.createElement('a') ;
+			link_to_profile.setAttribute('class','link_to_profile')
+			var href = '/'+invites[i].author.name ;
+			link_to_profile.setAttribute('href', href)
+			link_to_profile.setAttribute('target', '_blank') ;
+			link_to_profile.innerHTML = invites[i].author.name+' ' ;
+			var profile_photo = document.createElement('img') ;
+			profile_photo.src = '/serve_image/'+invites[i].author.image ;
+			link_to_profile.appendChild(profile_photo)
+			titleName.appendChild(link_to_profile) ;
+			inviteApplied.appendChild(titleName) ;
+			var status = document.createElement('p') ;
+			status.setAttribute('class','status_of_user') ;
+			status.innerHTML = 'STATUS' ;
+			var message = document.createElement('p') ;
+			//to check the status and message in the invites[i].applicants, check username then status ok?
+			//IMPORTANT
+			var applicants = invites[i].applicants ;
+			for(var j=0 ;j< applicants.length; j++){
+				if(applicants[j].id == user._id){
+					status.style.backgroundColor = applicants[j].status.color ;
+					message.innerHTML = applicants[j].status.message ;
+					inviteApplied.appendChild(status) ;
+					inviteApplied.appendChild(message) ;
+					break ;
+				}else{
+					console.log(applicants[j])
+				}
+			}
+			invites_applied.appendChild(inviteApplied) ;
+		}
+	}else{
+		var p = document.createElement('p');
+		p.innerHTML = "Opps, you didn't apply to any invite yet!" ;
+		invites_applied.appendChild(p)
+	}
+}
+
+function loadCreatedInvites(invites, user){
+	if(invites.length){
+		for(var i=0;i< invites.length;i++){
+			var inviteCreated = document.createElement('div') ;
+			inviteCreated.setAttribute('class','inviteCreated') ;
+			inviteCreated.setAttribute('invite_id',invites[i]._id)
+			var title = document.createElement('h2') ;
+			title.innerHTML = invites[i].title ;
+			inviteCreated.appendChild(title)
+			var applicants = invites[i].applicants ;
+			console.log(applicants)
+			if(applicants.length){
+				for(var j=0 ;j< applicants.length ;j++){
+					var applicant = document.createElement('div') ;
+					applicant.setAttribute('class','applicant') ;
+					var name_of_applicant = document.createElement('a') ;
+					name_of_applicant.setAttribute('class', 'name_of_applicant')
+					name_of_applicant.href = '/'+applicants[j].id ;
+					name_of_applicant.innerHTML = applicants[j].username ;
+					name_of_applicant.setAttribute('target', '_blank') ;
+					var add_applicant = document.createElement('span') ;
+					add_applicant.innerHTML = '<img src="/images/glyphicons/png/glyphicons-199-ok-circle.png">'
+					add_applicant.setAttribute('class', 'add_applicant') ;
+					add_applicant.setAttribute('invite_id',invites[i]._id)
+					add_applicant.setAttribute('user_id',applicants[j].username)
+					add_applicant.onclick = function(e){
+						var parent ;
+						if(e.target.getAttribute('class') === 'add_applicant'){
+							parent = e.target ;
+						}else{
+							parent = e.target.parentNode ;
+						}
+						$.post('/add_data/accept_invite',{
+							userId:parent.getAttribute('user_id') ,
+							inviteId:parent.getAttribute('invite_id') 
+						}, function(response){
+							var status_of_response = response.success ;
+							var new_parent = parent.parentNode ;
+							var p = document.createElement('p')
+							if(status_of_response){
+								new_parent.innerHTML = '' ;
+								p.innerHTML = 'Your invite application was a success!'
+								new_parent.appendChild(p) ;
+							}else{
+								console.log(status_of_response, 'behenchod')
+								p.innerHTML = 'Sorry, there was a trouble! Try again.' ;
+								new_parent.appendChild(p) ;
+								setTimeout(function(){
+									new_parent.removeChild(p) ;
+								}, 4000)
+							}
+						})
+					}
+					var remove_applicant = document.createElement('span') ;
+					remove_applicant.innerHTML = '<img src="/images/glyphicons/png/glyphicons-198-remove-circle.png">'
+					remove_applicant.setAttribute('class', 'remove_applicant')
+					remove_applicant.setAttribute('invite_id',invites[i]._id)
+					remove_applicant.setAttribute('user_id',applicants[j].username)
+					remove_applicant.onclick = function(e){
+						var parent ;
+						if(e.target.getAttribute('class') === 'remove_applicant'){
+							parent = e.target ;
+						}else{
+							parent = e.target.parentNode ;
+						}
+						$.post('/add_data/reject_invite',{
+							userId:parent.getAttribute('user_id') ,
+							inviteId:parent.getAttribute('invite_id') 
+						}, function(response){
+							console.log(response) ;
+						})
+					}
+					applicant.appendChild(name_of_applicant) ;
+					//applicant.appendChild(image_of_applicant) ;
+					applicant.appendChild(remove_applicant) ;
+					applicant.appendChild(add_applicant) ;
+					inviteCreated.appendChild(applicant) ;
+
+					var dummy = document.createElement('dummy') ;
+					dummy.setAttribute('class', 'dummy1') ;
+					dummy.innerHTML = '.'
+					inviteCreated.appendChild(dummy)
+				}
+			}else{
+				var p = document.createElement('p') ;
+				p.innerHTML = 'This invite doesn\'t have any applications '
+				inviteCreated.appendChild(p)
+			}
+			invites_created.appendChild(inviteCreated)
+		}
+	}else{
+		//load headers
+	}
+}
+
+/*
+<div class="inviteApplied">
+          <p>Alpha by <br> <a class="link_to_profile"> Name <img src="/serve_image/defaultImage.jpg"></a+></p>
+          <p><span class="status_of_user">STATUS</span></p>
+          <p class="message">MEssage HEre</p>
+        </div>
+*/

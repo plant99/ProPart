@@ -22,7 +22,7 @@ body{
   transition-duration: 0.5s ;
 }
 .create{
-  margin-left: 35% ;
+  margin-left: 25% ;
 }
 
 .dummy{
@@ -79,4 +79,142 @@ textarea{
   width: 60px ;
   height: 60px ;
   border-radius: 50% ;  
+}
+.profiles-board{
+  display: none ;
+}
+
+/* Profile Styles */
+
+.imageContainer img{
+  margin-top:30px ;
+  border-radius: 8px ;
+  width: 200px ;
+  height: 200px ;
+}
+.imageContainer{
+  border-radius: 4px ;
+}
+.profile_details .name{
+  font-size: 35px ;
+}
+span{
+  display: inline;
+  font-size: 30px ;
+  color: cyan ;
+}
+.rollno{
+  font-size: 45px ;
+}
+.profile_details{
+  font-size: 25px ;
+}
+.invites_applied{
+  border: 1px solid grey; 
+  padding: 20px ;
+  width: 50%;
+  margin-left: 25% ;
+}
+
+
+.inviteApplied{
+  border:1px solid grey;
+  padding: 10px ;
+  margin-top: 20px;
+}
+.inviteApplied h2{
+  border: none;
+  margin-left: none !important;
+}
+
+.status_of_user{
+  color: red !important;
+  background-color: yellow ;
+  padding: 10px ;
+  border-radius: 3px ;
+  width:20%;
+  margin-left: 40% ;
+}
+.inviteApplied p a{
+  display: inline-block;
+  color: white ;
+  text-decoration: none ;
+  font-size: 22px;
+  padding: 20px ;
+  border-radius: 5px;
+}
+.inviteApplied p a:hover{
+  cursor: pointer;
+  background-color: rgba(200,200,200,0.6);
+}
+.inviteApplied p img{
+  width: 50px ;
+  height: 50px ;
+  border-radius: 50% ;
+  margin-left: 5px;
+}
+.inviteApplied p{
+  margin-top: 20px ;
+  margin-bottom: 20px ;
+  font-size: 27px ;
+}
+.message{
+  color: rgb(150,200,150);
+}
+
+.invites_created{
+  border: 1px solid grey; 
+  padding: 20px ;
+  width: 50%;
+  margin-left: 25% ;
+  margin-bottom: 20px ;
+}
+.applicant{
+  text-align: left; 
+}
+.name_of_applicant{
+  margin-left: 10%;
+  padding: 12px ;
+  font-size: 24px ;
+  text-decoration: none ;
+  color: cyan ;
+}
+.name_of_applicant:hover{
+  text-decoration: none; 
+  color: cyan ;
+  border-radius: 5px ;
+  background-color: rgba(120,120,120,0.9);
+  cursor: pointer;
+}
+.add_applicant{
+  display: inline-block;
+  float: right;
+  background-color: rgba(0,200,0,0.8);
+  width: 50px ;
+  height: 50px ;
+  border-top-left-radius: 10px ;
+  border-bottom-left-radius: 10px ;
+}
+.remove_applicant{
+  float: right;
+  display: inline-block;
+  background-color: rgba(200,0,0,0.9);
+  width: 50px ;
+  height: 50px ;
+  border-top-right-radius: 10px ;
+  border-bottom-right-radius: 10px ;
+  margin-right: 50px;
+}
+.add_applicant img, .remove_applicant img{
+  margin-left: 25%;
+}
+.remove_applicant:hover{
+  cursor: pointer;
+}
+.add_applicant:hover{
+  cursor: pointer;
+} 
+.dummy1{
+  width: 500px ;
+  height: 20px ;
 }

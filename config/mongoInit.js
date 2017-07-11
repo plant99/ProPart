@@ -1,5 +1,5 @@
 var mongoose = require('mongoose') ;
-
+var Schema = mongoose.Schema ;
 module.exports.initDb = function(){
 	mongoose.connect('mongodb://localhost:27017/propart') ;
 	var db = mongoose.connection ;

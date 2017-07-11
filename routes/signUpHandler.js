@@ -31,19 +31,17 @@ router.post('/',function(req,res,next){
 					if(req.files){
 						console.log(req.files, 'dh')
 						if(req.files.profile_photo){
-							console.log(req.files.profile_photo)
 							sampleFile = req.files.profile_photo ;
-							if(sampleFile){
-								var nameOfImage = sampleFile.name ;
-								var extension = nameOfImage.split('.').pop() ;
-								if(extension === 'jpg' || extension === 'jpeg' || extension === 'png'){
-									sampleFile.mv(__dirname+'/../images/'+ req.body.username +'.'+sampleFile.name.split('.')[1], function(err){
-										if(err){
-											console.log(err)
-										}
-									})
-								}
+							var nameOfImage = sampleFile.name ;
+							var extension = nameOfImage.split('.').pop() ;
+							if(extension === 'jpg' || extension === 'jpeg' || extension === 'png'){
+								sampleFile.mv(__dirname+'/../images/'+ req.body.username +'.'+sampleFile.name.split('.')[1], function(err){
+									if(err){
+										console.log(err)
+									}
+								})
 							}
+							
 						}
 					}
 					var bcrypt = require('bcrypt');
@@ -62,7 +60,7 @@ router.post('/',function(req,res,next){
 							image: '',
 							applied_invitations: []
 		  				})
-		  				if(req.files.profile_photo.name){
+		  				if(req.files.profile_photo){
 		  					user.image = req.body.username + '.'  + req.files.profile_photo.name.split('.').pop() ;
 		  				}
 						user.save() ;

@@ -23,6 +23,7 @@
 	<div class="tabs">
 		<div class="tab create">CREATE</div>		
 		<div class="tab browse">BROWSE</div>
+    <div class="tab profiles">PROFILES</div>
 	</div>
   <!-- To clear float if any -->
 	<div class="dummy"></div>
@@ -45,7 +46,7 @@
         <br><br>
         <textarea name="description" class="description" placeholder="Describe the task and requirements"></textarea>
         <br><br>
-        <input type="text" name="requirements" class="requirements" placeholder="No of partners required?">
+        <input type="number" style="width: 25%;" name="requirements" class="requirements" placeholder="No of partners required?">
         <br><br>
         <input type="submit" class="submit" value="Create">
 		</div>
@@ -61,6 +62,33 @@
       </select>
 
       <div class="invites_container">
+        
+      </div>
+    </div>
+
+    <div class="board profiles-board" profile_id="<%= user._id%>">
+
+      <div class="imageContainer">
+        <%if(user.image){%>
+        <img src="/serve_image/<%=user.image%>">
+        <%}else{%>
+        <img src="/serve_image/defaultImage.jpg" width="200px"  height="200px">
+        <%}%>
+      </div>
+      <div class="profile_details">
+        <p class="name"><%=user.name%></p>
+        <span class="course"><%=user.course%></span> in <span class="branch"><%= user.branch%></span> department
+        <p class="rollno"><%=user.rollno%></p>
+      </div>
+
+
+      <div class="invites_created">
+        <h1>INVITES CREATED</h1>
+        
+      </div>
+
+      <div class="invites_applied">
+        <h1>INVITES APPLIED</h1>
         
       </div>
     </div>

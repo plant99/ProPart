@@ -2,12 +2,11 @@ var express = require('express') ;
 var router = express.Router() ;
 router.post('/invite', function(req, res, next){
 	var body = req.body ;
-	console.log(req.decoded._doc.image, 'badass')
 	var invite = new Invite({
 		category: body.category,
 		title: body.title,
 		description: body.description,
-		requirements: body.requirements,
+		requirements: body.requirements.toString(),
 		author: {
 			name:req.decoded._doc.username,
 			image: req.decoded._doc.image
@@ -45,9 +44,9 @@ router.post('/request_for_invite',function(req, res, next){
 					res.json({success: false, message: 'Invite not found'})
 				}else{
 					if(findIndexOf({username: user.username, id: user._id}, inviteFound.applicants) === -1){
-						inviteFound.applicants.push({username:user.username, id:user._id}) ;
+						inviteFound.applicants.push({username:user.username, id:user._id, status:{color: 'yellow', message:'Please wait for the user to evaluate your application.'}}) ;
 						User.findOne({username: user.username},function(err, user){
-							user.applied_invitations.push({id: id}) ;
+							user.applied_invitations.push({id: id, status:{color: 'yellow', message:'Please wait for the user to evaluate your application.'}}) ;
 							user.save(function(err, savedUser){							if(!err){
 									inviteFound.save(function(err, savedInvite){
 										res.json({success: true, invite: savedInvite})
@@ -70,8 +69,27 @@ router.post('/request_for_invite',function(req, res, next){
 		res.json({success:false})
 	}
 })
+
+router.post('/accept_invite',function(req, res, next){
+	var username = req.body.userId ;
+	var inviteId = req.body.inviteId ;
+	User.findOne({username: username}, function(err, user){
+		console.log(user.applied_invitations, 'bhosdike')
+	})
+})
+router.post('/reject_invite',function(req, res, next){
+	res.json({req: req})
+})
 module.exports = router ;
 
+
+function getIndexOfId(id, array){
+	for(var i=0;i<array.length ;i++){
+		if(array[i].id == id)
+			return i ;
+	}
+	return -1 ;
+}
 /*
 Invite.findOne({_id: id}, function(err, inviteFound){
 			if(err){

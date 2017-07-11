@@ -10,5 +10,12 @@ module.exports = mongoose.model('invite', new Schema({
 		name:String,
 		image:String
 	},
-	applicants: Array
+	applicants: [{
+		username: String,
+		id: String,
+		status: {
+			color: String,
+			message: String
+		}
+	}]
 }))
