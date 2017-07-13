@@ -52,16 +52,15 @@
 	
 
 	<script type="text/javascript" src="javascripts/jquery.min.js"></script>
-	<script type="text/javascript" src="javascripts/jqueryCookie.js"></script>
+	<script type="text/javascript" src="javascripts/jscookie.js"></script>
 	<script type="text/javascript">
 		$('#submit').click(function(){
 			if(($('.username').val()!="") && ($('.password').val()!="")){
 				$.post('/login', { username: $('.username').val(), password : $('.password').val()}, 
 			    function(returnedData){
 			         if(returnedData.token || returnedData.token!=undefined){
-			         	$.cookie('token',returnedData.token, {expires: 1}, {domain: 'localhost:3000'})
-			         	console.log(returnedData)
-						location.href  = "/dashboard"
+			         	Cookies.set('token',returnedData.token) ;
+			         	location.href = '/dashboard' ;
 			         }else{
 			         	notify(returnedData.message)
 			         	setTimeout(function(){

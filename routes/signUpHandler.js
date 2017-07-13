@@ -4,10 +4,7 @@ var bcrypt = require('bcrypt');
 var captchapng = require('captchapng')
 var request = require('request')
 router.post('/',function(req,res,next){
-	console.log('Signup hai bhai')
-	console.log(req.body.username)
 	var response = req.body['g-recaptcha-response'] ;
-	console.log(response)
 	var options = {
 		method: 'post',
 		url:'https://www.google.com/recaptcha/api/siteverify',
@@ -24,12 +21,9 @@ router.post('/',function(req,res,next){
 			if(body.success != false){
 				User.findOne({username:req.body.username},function(err, user){
 				if(user){
-					console.log('Rendering with a message')
-					console.log(user)
 					res.render('signup',{message:'User with the same username exists, you might want to login'})
 				}else{
 					if(req.files){
-						console.log(req.files, 'dh')
 						if(req.files.profile_photo){
 							sampleFile = req.files.profile_photo ;
 							var nameOfImage = sampleFile.name ;
@@ -64,7 +58,6 @@ router.post('/',function(req,res,next){
 		  					user.image = req.body.username + '.'  + req.files.profile_photo.name.split('.').pop() ;
 		  				}
 						user.save() ;
-						console.log(user)
 					});
 
 					setTimeout(function(){

@@ -52,7 +52,24 @@ $('.profiles').click(function(){
 //add invite handler
 
 $submit.click(function(){
-	$.post('/add_data/invite',{
+	var requirements = Number($('.requirements').val()) ;
+	console.log(requirements) ;
+	if(requirements){
+		console.log(typeof(Number($('.requirements').val())),Number($('.requirements').val()))
+		$.post('/add_data/invite',{
+			category: $('.category').val(),
+			title: $('.title').val(),
+			description: $('.description').val(),
+			requirements:$('.requirements').val()
+		}, function(response){
+			clearInvitationFields(response)
+		})
+	}else{
+		console.log($('.requirements').val(), typeof($('.requirements').val()))
+	}
+})
+/*
+$.post('/add_data/invite',{
 		category: $('.category').val(),
 		title: $('.title').val(),
 		description: $('.description').val(),
@@ -60,7 +77,7 @@ $submit.click(function(){
 	}, function(response){
 		clearInvitationFields(response)
 	})
-})
+*/
 
 
 // function to clear the fields in add invite form
@@ -212,7 +229,18 @@ function loadAppliedInvites(invites, user){
 			var applicants = invites[i].applicants ;
 			for(var j=0 ;j< applicants.length; j++){
 				if(applicants[j].id == user._id){
-					status.style.backgroundColor = applicants[j].status.color ;
+					var color = applicants[j].status.color ;
+					if(color === 'red'){
+						status.style.backgroundColor = '#d8401a'
+						status.style.color = '#f4fcf2' ;
+					}else if(color === 'green'){
+						status.style.backgroundColor = '#1ad849' ;
+						status.style.color = '#f4fcf2' ;
+					}else{
+						status.style.backgroundColor = '#e7f47f' ;
+						status.style.color = '#ea4f5a' ;
+					}
+					//status.style.backgroundColor = applicants[j].status.color ;
 					message.innerHTML = applicants[j].status.message ;
 					inviteApplied.appendChild(status) ;
 					inviteApplied.appendChild(message) ;
@@ -241,94 +269,154 @@ function loadCreatedInvites(invites, user){
 			inviteCreated.appendChild(title)
 			var applicants = invites[i].applicants ;
 			console.log(applicants)
+			var applicant_counter_for_single_invite = 0 ;
 			if(applicants.length){
+				var h3 = document.createElement('h3') ;
+				h3.innerHTML = 'Pending application' ;
+				inviteCreated.appendChild(h3) ;
+				applicant_counter_for_single_invite = 0 ;
 				for(var j=0 ;j< applicants.length ;j++){
-					var applicant = document.createElement('div') ;
-					applicant.setAttribute('class','applicant') ;
-					var name_of_applicant = document.createElement('a') ;
-					name_of_applicant.setAttribute('class', 'name_of_applicant')
-					name_of_applicant.href = '/'+applicants[j].id ;
-					name_of_applicant.innerHTML = applicants[j].username ;
-					name_of_applicant.setAttribute('target', '_blank') ;
-					var add_applicant = document.createElement('span') ;
-					add_applicant.innerHTML = '<img src="/images/glyphicons/png/glyphicons-199-ok-circle.png">'
-					add_applicant.setAttribute('class', 'add_applicant') ;
-					add_applicant.setAttribute('invite_id',invites[i]._id)
-					add_applicant.setAttribute('user_id',applicants[j].username)
-					add_applicant.onclick = function(e){
-						var parent ;
-						if(e.target.getAttribute('class') === 'add_applicant'){
-							parent = e.target ;
-						}else{
-							parent = e.target.parentNode ;
-						}
-						$.post('/add_data/accept_invite',{
-							userId:parent.getAttribute('user_id') ,
-							inviteId:parent.getAttribute('invite_id') 
-						}, function(response){
-							var status_of_response = response.success ;
-							var new_parent = parent.parentNode ;
-							var p = document.createElement('p')
-							if(status_of_response){
-								new_parent.innerHTML = '' ;
-								p.innerHTML = 'Your invite application was a success!'
-								new_parent.appendChild(p) ;
-							}else{
-								console.log(status_of_response, 'behenchod')
-								p.innerHTML = 'Sorry, there was a trouble! Try again.' ;
-								new_parent.appendChild(p) ;
-								setTimeout(function(){
-									new_parent.removeChild(p) ;
-								}, 4000)
-							}
-						})
-					}
-					var remove_applicant = document.createElement('span') ;
-					remove_applicant.innerHTML = '<img src="/images/glyphicons/png/glyphicons-198-remove-circle.png">'
-					remove_applicant.setAttribute('class', 'remove_applicant')
-					remove_applicant.setAttribute('invite_id',invites[i]._id)
-					remove_applicant.setAttribute('user_id',applicants[j].username)
-					remove_applicant.onclick = function(e){
-						var parent ;
-						if(e.target.getAttribute('class') === 'remove_applicant'){
-							parent = e.target ;
-						}else{
-							parent = e.target.parentNode ;
-						}
-						$.post('/add_data/reject_invite',{
-							userId:parent.getAttribute('user_id') ,
-							inviteId:parent.getAttribute('invite_id') 
-						}, function(response){
-							console.log(response) ;
-						})
-					}
-					applicant.appendChild(name_of_applicant) ;
-					//applicant.appendChild(image_of_applicant) ;
-					applicant.appendChild(remove_applicant) ;
-					applicant.appendChild(add_applicant) ;
-					inviteCreated.appendChild(applicant) ;
+					if(applicants[j].status.color == 'yellow'){
+						applicant_counter_for_single_invite++ ;
+						var applicant = document.createElement('div') ;
+						applicant.setAttribute('class','applicant') ;
+						var name_of_applicant = document.createElement('a') ;
+						name_of_applicant.setAttribute('class', 'name_of_applicant')
+						name_of_applicant.href = '/'+applicants[j].id ;
+						name_of_applicant.innerHTML = applicants[j].username ;
+						name_of_applicant.setAttribute('target', '_blank') ;
+						var add_applicant = document.createElement('span') ;
+						add_applicant.innerHTML = '<img src="/images/glyphicons/png/glyphicons-199-ok-circle.png">'
+						add_applicant.setAttribute('class', 'add_applicant') ;
+						add_applicant.setAttribute('invite_id',invites[i]._id)
+						add_applicant.setAttribute('user_id',applicants[j].username)
+						add_applicant.setAttribute('dumy','check_grammar') ;
+						var remove_applicant = document.createElement('span') ;
+						remove_applicant.innerHTML = '<img src="/images/glyphicons/png/glyphicons-198-remove-circle.png">'
+						remove_applicant.setAttribute('class', 'remove_applicant')
+						remove_applicant.setAttribute('invite_id',invites[i]._id)
+						remove_applicant.setAttribute('user_id',applicants[j].username)
+						remove_applicant.setAttribute('dumy','check_grammar')
+						applicant.appendChild(name_of_applicant) ;
+						//applicant.appendChild(image_of_applicant) ;
+						applicant.appendChild(remove_applicant) ;
+						applicant.appendChild(add_applicant) ;
+						inviteCreated.appendChild(applicant) ;
 
-					var dummy = document.createElement('dummy') ;
-					dummy.setAttribute('class', 'dummy1') ;
-					dummy.innerHTML = '.'
-					inviteCreated.appendChild(dummy)
+						var dummy = document.createElement('dummy') ;
+						dummy.setAttribute('class', 'dummy1') ;
+						dummy.innerHTML = '.'
+						inviteCreated.appendChild(dummy)
+					}
+				}
+				if(!applicant_counter_for_single_invite){
+					var p = document.createElement('p') ;
+					p.innerHTML = 'This invite doesn\'t have any pending applications pending!!'
+					inviteCreated.appendChild(p)
+				}else{
+
+				}
+				applicant_counter_for_single_invite = 0;
+				var h3 = document.createElement('h3') ;
+				h3.innerHTML = 'Approved applications' ;
+				inviteCreated.appendChild(h3) ;
+				for(var j=0;j< applicants.length; j++){
+					if(applicants[j].status.color == 'green'){
+						var a = document.createElement('a') ;
+						a.innerHTML = applicants[j].username ;
+						a.setAttribute('href', '/'+applicants[j].id) ;
+						a.setAttribute('class', 'approved_user_link')
+						inviteCreated.appendChild(a) ;
+						applicant_counter_for_single_invite++ ;
+					}
+				}
+				if(!applicant_counter_for_single_invite){
+					var p = document.createElement('p') ;
+					p.innerHTML = 'This invite doesn\'t have any approved applications pending!!'
+					inviteCreated.appendChild(p)
+				}else{
+
 				}
 			}else{
 				var p = document.createElement('p') ;
-				p.innerHTML = 'This invite doesn\'t have any applications '
+				p.innerHTML = 'This invite doesn\'t have any applications!!'
 				inviteCreated.appendChild(p)
+			}
+			if(i!= invites.length-1){
+				inviteCreated.innerHTML+= '<hr>'
 			}
 			invites_created.appendChild(inviteCreated)
 		}
 	}else{
 		//load headers
 	}
-}
+	// add_applicant event listners
+	var list = document.querySelectorAll('.add_applicant') ;
+	for(var i=0;i<list.length;i++ ){
+		list[i].onclick = function(e){
+			console.log('Hope event handler is running') ;
+			console.log(e.target);
+			var parent ;
+			if(e.target.getAttribute('class') === 'add_applicant'){
+				parent = e.target ;
+			}else{
+				parent = e.target.parentNode ;
+			}
+			$.post('/add_data/accept_invite',{
+				userId:parent.getAttribute('user_id') ,
+				inviteId:parent.getAttribute('invite_id') 
+			}, function(response){
+				var status_of_response = response.success ;
+				var new_parent = parent.parentNode ;
+				var p = document.createElement('p')
+				if(status_of_response){
+					new_parent.innerHTML = '' ;
+					p.innerHTML = 'User has been approved for the invite!'
+					new_parent.appendChild(p) ;
+				}else{
+					console.log(status_of_response, 'behenchod')
+					p.innerHTML = 'Sorry, there was a trouble! Try again.' ;
+					new_parent.appendChild(p) ;
+					setTimeout(function(){
+						new_parent.removeChild(p) ;
+					}, 4000)
+				}
+			})
+		}
+	}
 
-/*
-<div class="inviteApplied">
-          <p>Alpha by <br> <a class="link_to_profile"> Name <img src="/serve_image/defaultImage.jpg"></a+></p>
-          <p><span class="status_of_user">STATUS</span></p>
-          <p class="message">MEssage HEre</p>
-        </div>
-*/
+	list = document.querySelectorAll('.remove_applicant') ;
+	for(var i=0;i< list.length; i++){
+		list[i].onclick = function(e){
+			console.log(e.target);
+			var parent ;
+			if(e.target.getAttribute('class') === 'remove_applicant'){
+				parent = e.target ;
+			}else{
+				parent = e.target.parentNode ;
+			}
+			$.post('/add_data/reject_invite',{
+				userId:parent.getAttribute('user_id') ,
+				inviteId:parent.getAttribute('invite_id') 
+			}, function(response){
+				var status_of_response = response.success ;
+				var new_parent = parent.parentNode ;
+				var p = document.createElement('p')
+				if(status_of_response){
+					new_parent.innerHTML = '' ;
+					p.innerHTML = 'User was rejected from the invite!'
+					new_parent.appendChild(p) ;
+				}else{
+					console.log(status_of_response, 'behenchod')
+					p.innerHTML = 'Sorry, there was a trouble! Try again.' ;
+					new_parent.appendChild(p) ;
+					setTimeout(function(){
+						new_parent.removeChild(p) ;
+					}, 4000)
+				}
+			})
+		}
+	}
+}
+	
+	

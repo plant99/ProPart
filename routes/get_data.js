@@ -33,19 +33,21 @@ router.get('/user_applied_invites/:id', function(req, res, next){
 })
 router.get('/user_created_invites/:id', function(req, res, next){
 	User.findOne({_id: req.params.id}, function(err, user){
-		var active_invites = user.active_invitations ;
-		var index=0 ;
-		var created_invites_to_be_sent = [] ;
-		for(var i=0 ;i<active_invites.length;i++){
-			Invite.findOne({_id: active_invites[i]}, function(err, invite){
-				index++ ;
-				created_invites_to_be_sent.push(invite) ;
-				if(index ===  active_invites.length){
-					res.json({success:true, created_invites:created_invites_to_be_sent, user: req.decoded._doc})
-				}else{
-					console.log(index, active_invites.length)
-				}
-			})
+		if(err){
+			res.json({error: err})
+		}else{
+			var active_invites = user.active_invitations ;
+			var index=0 ;
+			var created_invites_to_be_sent = [] ;
+			for(var i=0 ;i<active_invites.length;i++){
+				Invite.findOne({_id: active_invites[i]}, function(err, invite){
+					index++ ;
+					created_invites_to_be_sent.push(invite) ;
+					if(index ===  active_invites.length){
+						res.json({success:true, created_invites:created_invites_to_be_sent, user: req.decoded._doc})
+					}
+				})
+			}
 		}
 	})
 })

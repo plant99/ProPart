@@ -71,14 +71,76 @@ router.post('/request_for_invite',function(req, res, next){
 })
 
 router.post('/accept_invite',function(req, res, next){
+	console.log('accept_invite ka to req aaya hai') ;
 	var username = req.body.userId ;
 	var inviteId = req.body.inviteId ;
 	User.findOne({username: username}, function(err, user){
-		console.log(user.applied_invitations, 'bhosdike')
+		var x = getIndexOfId(inviteId, user.applied_invitations) ;
+		console.log(x, 'indexOfId')
+		user.applied_invitations[x].status.color = 'green' ;
+		user.applied_invitations[x].status.message = 'Your application to this invite was a success!' ;
+		Invite.findOne({_id: inviteId}, function(err, invite){
+			var y = getIndexOfId(user._id,invite.applicants ) ;
+			if(y === -1){
+				console.log('No one')
+				res.json({success: false})
+			}else{
+				console.log('invite khoja ja ra hai')
+				invite.applicants[y].status.color = 'green' ;
+				invite.applicants[y].status.message = 'Your application to this invite was a success!' ;
+				var requirements = Number(invite.requirements)-1 ;
+				console.log(requirements, 'bhag dk bose')
+				invite.requirements = requirements.toString() ;
+				// requirements handler to not exceed requirements
+				user.save(function(err, userSaved){
+					if(err){
+						res.json({success: false}) ;
+					}else{
+						invite.save(function(err, inviteSaved){
+							if(err){
+								res.json({success: false}) ;
+							}else{
+								res.json({success:true, user: userSaved, invite: inviteSaved});
+							}
+						})
+					}
+				})
+			}
+			
+		})
 	})
 })
 router.post('/reject_invite',function(req, res, next){
-	res.json({req: req})
+	var username = req.body.userId ;
+	var inviteId = req.body.inviteId ;
+	User.findOne({username: username}, function(err, user){
+		var x = getIndexOfId(inviteId, user.applied_invitations) ;
+		user.applied_invitations[x].status.color = 'red' ;
+		user.applied_invitations[x].status.message = 'Your application to this invite was rejected!' ;
+		Invite.findOne({_id: inviteId}, function(err, invite){
+			var y = getIndexOfId(user._id,invite.applicants ) ;
+			if(y === -1){
+				res.json({success: false})
+			}else{
+				invite.applicants[y].status.color = 'red' ;
+				invite.applicants[y].status.message = 'Your application to this invite was forbidden!' ;
+				user.save(function(err, userSaved){
+					if(err){
+						res.json({success: false}) ;
+					}else{
+						invite.save(function(err, inviteSaved){
+							if(err){
+								res.json({success: false}) ;
+							}else{
+								res.json({success:true, user: userSaved, invite: inviteSaved});
+							}
+						})
+					}
+				})
+			}
+			
+		})
+	})
 })
 module.exports = router ;
 

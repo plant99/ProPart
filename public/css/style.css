@@ -128,7 +128,7 @@ span{
 }
 
 .status_of_user{
-  color: red !important;
+  color: red ;
   background-color: yellow ;
   padding: 10px ;
   border-radius: 3px ;
@@ -217,4 +217,29 @@ span{
 .dummy1{
   width: 500px ;
   height: 20px ;
+}
+.applicant p{
+  text-align: center;
+}
+.inviteCreated{
+  font-size: 20px;
+}
+.inviteCreated h3{
+  color: cyan; 
+}
+.approved_user_link{
+  display: block;
+  padding: 10px ;
+  color: white ;
+  background-color: rgba(128,128,128,0.6); ;
+  border-radius: 10px ;
+  text-decoration: none;
+  margin-top: 10px ;
+  width: 28%;
+  margin-left: 36% ;
+}
+.approved_user_link:hover{
+  cursor: pointer;
+  color: cyan ; 
+  text-decoration: none ;
 }
