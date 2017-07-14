@@ -89,22 +89,26 @@ router.post('/accept_invite',function(req, res, next){
 				invite.applicants[y].status.color = 'green' ;
 				invite.applicants[y].status.message = 'Your application to this invite was a success!' ;
 				var requirements = Number(invite.requirements)-1 ;
-				console.log(requirements, 'bhag dk bose')
-				invite.requirements = requirements.toString() ;
-				// requirements handler to not exceed requirements
-				user.save(function(err, userSaved){
-					if(err){
-						res.json({success: false}) ;
-					}else{
-						invite.save(function(err, inviteSaved){
-							if(err){
-								res.json({success: false}) ;
-							}else{
-								res.json({success:true, user: userSaved, invite: inviteSaved});
-							}
-						})
-					}
-				})
+				if(requirements>=0){
+					console.log(requirements, 'bhag dk bose')
+					invite.requirements = requirements.toString() ;
+					// requirements handler to not exceed requirements
+					user.save(function(err, userSaved){
+						if(err){
+							res.json({success: false}) ;
+						}else{
+							invite.save(function(err, inviteSaved){
+								if(err){
+									res.json({success: false}) ;
+								}else{
+									res.json({success:true, user: userSaved, invite: inviteSaved});
+								}
+							})
+						}
+					})
+				}else{
+					res.json({success:false, message:'Optimum applications reached!'})
+				}
 			}
 			
 		})
