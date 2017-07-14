@@ -325,7 +325,8 @@ function loadCreatedInvites(invites, user){
 						var a = document.createElement('a') ;
 						a.innerHTML = applicants[j].username ;
 						a.setAttribute('href', '/'+applicants[j].id) ;
-						a.setAttribute('class', 'approved_user_link')
+						a.setAttribute('class', 'approved_user_link') ;
+						a.setAttribute('target','_blank')
 						inviteCreated.appendChild(a) ;
 						applicant_counter_for_single_invite++ ;
 					}
