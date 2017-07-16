@@ -16,5 +16,9 @@ module.exports = mongoose.model('user', new Schema({
 			color:String,
 			message: String
 		}
+	}],
+	conversations:[{
+		username: String,
+		unread: Boolean
 	}]
 }))

@@ -8,8 +8,10 @@ module.exports.initDb = function(){
     	console.log('Connected')
     	User = require('../models/User')
     	Invite = require('../models/Invite')
+			Chat = require('../models/Chat')
+			Online = require('../models/Online')
     })
-    
+
 }
 
 //worke

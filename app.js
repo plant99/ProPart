@@ -1,6 +1,6 @@
 //Dependencies
 var express = require('express'); // The main framework
-var path = require('path'); // Used to merge paths efficiently 
+var path = require('path'); // Used to merge paths efficiently
 var bodyParser = require('body-parser'); //used to parse body of the request
 var logger = require('morgan'); // used to log request url type and response code in the terminal
 var cookieParser = require('cookie-parser')
@@ -19,7 +19,10 @@ var loginHandler = require('./routes/loginHandler.js')
 var signUpHandler = require('./routes/signUpHandler.js')
 var add_data = require('./routes/add_data.js')
 var get_data = require('./routes/get_data.js')
+var chat_server = require('./routes/chat_server')
 
+var http = require('http').Server(app);
+var io = require('socket.io')(http) ;
 //require middlewares
 
 var authenticate = require('./middlewares/authenticate')
@@ -55,13 +58,17 @@ app.post('/decode_token',function(req, res, next){
   })
 })
 //Routes
+app.use('/login',loginHandler)
+app.use('/signup',signUpHandler)
+app.use(authenticate)
+
 app.get('/:id', function(req, res, next){
   User.findOne({_id: req.params.id}, function(err, user){
     if(err){
       next();
     }else{
       if(user){
-        res.render('profile',{user : user})
+        res.render('profile',{user : user, logged_user: req.decoded._doc})
       }else{
         next()
       }
@@ -74,16 +81,14 @@ app.get('/:username', function(req, res, next){
       next();
     }else{
       if(user){
-        res.render('profile',{user : user})
+        res.render('profile',{user : user, logged_user: req.decoded._doc})
       }else{
         next()
       }
     }
   })
 })
-app.use('/login',loginHandler)
-app.use('/signup',signUpHandler)
-app.use(authenticate)
+
 app.get('/', function(req, res, next){
   res.end('chutiya')
 })
@@ -105,6 +110,7 @@ app.get('/serve_image/:name', function(req, res, next){
      res.end(image, 'binary');
 })
 
+app.use('/chat',chat_server) ;
 /*
 //templates
 
@@ -126,4 +132,105 @@ app.use(function(err, req, res, next) {
 app.use(function(req,res){
   res.render('error', {message:''})
 })
-app.listen(3000)
+
+//io function handlers
+io.on('connection', function(socket){
+
+  //private message saving
+
+  socket.on('private message',function(data){
+    var message = data.message ;
+    var source = data.source ;
+    var target = data.target ;
+    Chat.findOne({participants:[source,target]}, function(err, chat_0){
+      if(err){
+        console.log(err) ;
+      }else{
+        if(chat_0){
+          //insert message
+          chat_0.messages.push({
+            author: source,
+            message: message,
+            time: new Date()
+          })
+          chat_0.save(function(err, chat){
+            if(err) console.log(err);
+          })
+        }else{
+          Chat.findOne({participants:[target, source]}, function(err, chat_1){
+              if(err){
+                console.log(err)
+              }else{
+                if(chat_1){
+                  //insert message
+                  chat_1.messages.push({
+                    author: source,
+                    message: message,
+                    time: new Date()
+                  })
+                  chat_1.save(function(err, chat){
+                    if(err) console.log(err);
+                  })
+                }
+              }
+          })
+        }
+      }
+    })
+
+
+    //Live sending of messages
+
+  })
+
+})
+
+
+http.listen(3000) ;
+
+function findIndexOf(username, array){
+  for(var i=0;i< array.length ;i++){
+    if( username === array[i].username){
+      return i ;
+    }
+  }
+  return -1 ;
+}
+
+/*
+
+Saving Chat
+
+Chat.findOne({participants:[p1,p2]}, function(err, chat_0){
+  if(chat_0){
+    //insert message
+    chat_0.messages.push({
+      author: p1,
+      message: message_text,
+      time: new Date()
+    })
+    chat_0.save(function(err, chat){
+      if(err) console.log(err);
+    })
+  }else{
+    Chat.findOne({participants:[p2,p1]}, function(err, chat_1){
+        if(err){
+          console.log(err)
+        }else{
+          if(chat_1){
+            //insert message
+            chat_1.messages.push({
+              author: host,
+              message: message_text,
+              time: new Date()
+            })
+            chat_1.save(function(err, chat){
+              if(err) return;
+            })
+          }
+        }
+    })
+  }
+})
+
+*/

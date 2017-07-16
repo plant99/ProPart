@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Chat</title>
+	<link rel="stylesheet" type="text/css" href="/css/bootstrap.css">
+	<style>
+		body{
+				background-image: url('/images/chat_bg.jpg');
+				background-repeat: no-repeat;
+				background-attachment: fixed;
+				background-size: 100% 100%;
+		}
+		.messageBox{
+			margin-top: 30px ;
+			width: 600px ;
+			height: 600px;
+		}
+		.messages{
+			height: 400px ;
+			border:1px solid grey ;
+			margin:50px 0px 50px 0px;
+			overflow:auto;
+			padding: 20px ;
+		}
+		.message{
+			padding: 10px ;
+			border-radius: 5px ;
+			color:white ;
+		}
+		.left{
+			background-color: rgba(50,100,150,0.4) ;
+		}
+		.right{
+			background-color: rgba(50,100,100,0.4) ;
+			text-align: right;
+		}
+		.btn{
+			margin-left: 40%;
+		}
+	</style>
+</head>
+<body>
+	<div class="container messageBox">
+		<div class="messages">
+			<%if(chat.messages.length){%>
+				<%for(var i=0;i<chat.messages.length;i++){%>
+					<%if(chat.messages[i].author === host){%>
+						<p class="message right"><strong><%= chat.messages[i].author %> :</strong><%= chat.messages[i].message %></p>
+					<%}else{%>
+						<p class="message left"><strong><%= chat.messages[i].author %> :</strong><%= chat.messages[i].message %></p>
+					<%}%>
+				<%}%>
+			<%}%>
+		</div>
+		<div class="add_message">
+			<input type="text" placeholder="Enter message here!" id="message" class="form-control">
+		</div>
+		<br />
+		<div class="btn btn-success" id="send" host="<%= host %>" target="<%= guest %>">Send</div>
+	</div>
+</body>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/javascripts/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+			var socket = io('localhost:3000') ;
+			$('#send').click(function(e){
+				socket.emit('private message', {
+					message: $('#message').val(),
+					source: e.target.getAttribute('host'),
+					target: e.target.getAttribute('target')
+				})
+				$('#message').val('') ;
+			})
+		})
+</script>
+</html>

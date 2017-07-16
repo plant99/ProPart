@@ -2,7 +2,7 @@
 <html>
 <head>
 	<title>Profile</title>
-  	<link href="https://fonts.googleapis.com/css?family=Rationale" rel="stylesheet"> 
+  	<link href="https://fonts.googleapis.com/css?family=Rationale" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
 	<style type="text/css">
@@ -14,9 +14,9 @@
 			font-family: 'Shadows Into Light', Monospace;
 			margin:30px auto;
 			text-align: center ;
-			background-image: url('/images/bg1.jpeg');
+			background-image: url('/images/bg1.jpg');
 			background-size: 100% 800px ;
-			background-attachment: fixed; 
+			background-attachment: fixed;
 		}
 		 h1{
 			font-size: 26px ;
@@ -47,6 +47,22 @@
 		.profile_details{
 			font-size: 25px ;
 		}
+		.list-group-item{
+			color: black ;
+			margin-top: 10px ;
+		}
+		.list-group-item:hover{
+			cursor: pointer;
+		}
+		.list-group{
+
+		}
+		.messageBox{
+			padding: 20px ;
+			border: 1px solid grey ;
+			margin-left: 37.5%;
+			width: 25% ;
+		}
 	</style>
 </head>
 <body>
@@ -61,6 +77,18 @@
 		<p class="name"><%=user.name%></p>
 		<span class="course"><%=user.course%></span> in <span class="branch"><%= user.branch%></span> department
 		<p class="rollno"><%=user.rollno%></p>
+		<% if(user.username === logged_user.username){%>
+			<div class="messageBox">
+				<p>MessageBox</p>
+				<ul class="list-group">
+				<%for(var i=0;i< user.conversations.length;i++){%>
+					<a href="/chat/<%= user.conversations[i].username %>"><li class="list-group-item"> <%= user.conversations[i].username %> </li></a>
+				<%}%>
+				</ul>
+			</div>
+		<%}else{%>
+			<a href="/chat/<%= user.username %>"><div class="btn btn-success" style="font-size: 20px ;">Message</div></a>
+		<%}%>
 	</div>
 </body>
 </html>
