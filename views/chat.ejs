@@ -66,6 +66,10 @@
     $(document).ready(function(){
 			var socket = io('localhost:3000') ;
 			$('#send').click(function(e){
+				var p = document.createElement('p') ;
+				p.innerHTML ='<strong>' + e.target.getAttribute('host')+ '</strong> : ' + $('#message').val() ;
+				p.setAttribute('class','message right') ;
+				document.querySelector('.messages').appendChild(p) ;
 				socket.emit('private message', {
 					message: $('#message').val(),
 					source: e.target.getAttribute('host'),
