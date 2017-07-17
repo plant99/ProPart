@@ -136,20 +136,27 @@ app.use(function(req,res){
 //io function handlers
 io.on('connection', function(socket){
   //handler user during connections
+  console.log(socket)
   var cookiesParsed = socket.handshake.headers.cookie.replace('; ','=').replace('; ','=').split('=') ;
+  var target = socket.handshake.headers.referer.split('/').pop();
   var indexOfUsername = cookiesParsed.indexOf('username') ;
   var username = cookiesParsed[indexOfUsername+1] ;
   Online.findOne({username:username}, function(err, user){
     if(err) console.log(err) ;
+    var socket_to_be_saved = {
+      socket_id: socket.id,
+      target: target
+    }
     if(user){
-      user.socket_ids.push(socket.id) ;
+      console.log(socket_to_be_saved)
+      user.socket_ids.push(socket_to_be_saved) ;
       user.save(function(err, onlineSaved){
         if(err) console.log(err) ;
       })
     }else{
       var online = new Online({
         username: username,
-        socket_ids:[socket.id]
+        socket_ids:[socket_to_be_saved]
       })
       online.save(function(err, onlineSaved){
         if(err) console.log(err) ;
@@ -161,12 +168,11 @@ io.on('connection', function(socket){
     console.log(username)
     Online.findOne({username: username}, function(err, user){
       if(user && user.socket_ids.length){
-        if(user.socket_ids.indexOf(socket.id) != (-1)){
-          user.socket_ids.splice(user.socket_ids.indexOf(socket.id),1) ;
-          user.save(function(err){
-            if(err) console.log(err) ;
-          })
-        }
+        var socket_index = findIndexOfSocketId(socket.id,user.socket_ids) ;
+        user.socket_ids.splice(socket_index,1) ;
+        user.save(function(err){
+          if(err) console.log(err) ;
+        }) ;
       }
     })
   })
@@ -222,8 +228,12 @@ io.on('connection', function(socket){
         console.log(user)
         if(user.socket_ids.length){
           for(var i=0;i<user.socket_ids.length;i++){
-            console.log(user.socket_ids[i],'is socket id')
-            socket.to(user.socket_ids[i]).emit('private message from_server', data);
+            if(user.socket_ids[i].target === data.source){
+              socket.to(user.socket_ids[i].socket_id).emit('private message from_server', data);
+            }else{
+              console.log(data)
+              console.log(user.socket_ids[i].target, data.source, 'Show me the diff')
+            }
           }
         }
       }
@@ -239,6 +249,14 @@ http.listen(3000) ;
 function findIndexOf(username, array){
   for(var i=0;i< array.length ;i++){
     if( username === array[i].username){
+      return i ;
+    }
+  }
+  return -1 ;
+}
+function findIndexOfSocketId(id, array){
+  for(var i=0;i< array.length ;i++){
+    if( id === array[i].socket_id){
       return i ;
     }
   }
@@ -280,5 +298,15 @@ Chat.findOne({participants:[p1,p2]}, function(err, chat_0){
     })
   }
 })
+
+*/
+
+/*
+if(user.socket_ids.indexOf(socket.id) != (-1)){
+  user.socket_ids.splice(user.socket_ids.indexOf(socket.id),1) ;
+  user.save(function(err){
+    if(err) console.log(err) ;
+  })
+}
 
 */
