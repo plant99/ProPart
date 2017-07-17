@@ -77,6 +77,16 @@
 				})
 				$('#message').val('') ;
 			})
+
+			socket.on('private message from_server', function(data){
+				var source = data.source ;
+				var target = data.target ;
+				var message = data.message ;
+				var p = document.createElement('p') ;
+				p.innerHTML = '<strong>'+source+'</strong> : '+ message;
+				p.setAttribute('class', 'message left') ;
+				document.querySelector('.messages').appendChild(p) ;
+			})
 		})
 </script>
 </html>

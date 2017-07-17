@@ -135,6 +135,41 @@ app.use(function(req,res){
 
 //io function handlers
 io.on('connection', function(socket){
+  //handler user during connections
+  var cookiesParsed = socket.handshake.headers.cookie.replace('; ','=').replace('; ','=').split('=') ;
+  var indexOfUsername = cookiesParsed.indexOf('username') ;
+  var username = cookiesParsed[indexOfUsername+1] ;
+  Online.findOne({username:username}, function(err, user){
+    if(err) console.log(err) ;
+    if(user){
+      user.socket_ids.push(socket.id) ;
+      user.save(function(err, onlineSaved){
+        if(err) console.log(err) ;
+      })
+    }else{
+      var online = new Online({
+        username: username,
+        socket_ids:[socket.id]
+      })
+      online.save(function(err, onlineSaved){
+        if(err) console.log(err) ;
+      })
+    }
+  })
+  //handle disconnections
+  socket.on('disconnect', function(){
+    console.log(username)
+    Online.findOne({username: username}, function(err, user){
+      if(user && user.socket_ids.length){
+        if(user.socket_ids.indexOf(socket.id) != (-1)){
+          user.socket_ids.splice(user.socket_ids.indexOf(socket.id),1) ;
+          user.save(function(err){
+            if(err) console.log(err) ;
+          })
+        }
+      }
+    })
+  })
 
   //private message saving
 
@@ -180,6 +215,19 @@ io.on('connection', function(socket){
 
 
     //Live sending of messages
+
+    Online.findOne({username:target}, function(err, user){
+      if(err) console.log(err) ;
+      if(user){
+        console.log(user)
+        if(user.socket_ids.length){
+          for(var i=0;i<user.socket_ids.length;i++){
+            console.log(user.socket_ids[i],'is socket id')
+            socket.to(user.socket_ids[i]).emit('private message from_server', data);
+          }
+        }
+      }
+    })
 
   })
 
