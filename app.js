@@ -90,7 +90,7 @@ app.get('/:username', function(req, res, next){
 })
 
 app.get('/', function(req, res, next){
-  res.end('chutiya')
+  res.redirect('/dashboard') ;
 })
 app.use('/add_data', add_data)
 app.use('/get_data', get_data)
