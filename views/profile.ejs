@@ -63,6 +63,10 @@
 			margin-left: 37.5%;
 			width: 25% ;
 		}
+		.dummy_width{
+			width: 100% ;
+			height: 100px ;
+		}
 	</style>
 </head>
 <body>
@@ -90,6 +94,82 @@
 			<a href="/chat/<%= user.username %>"><div class="btn btn-success" style="font-size: 20px ;">Message</div></a>
 		<%}%>
 	</div>
-	<% include footer.ejs %>
+	<div class="dummy_width">
+		.
+	</div>
+
+
+	<style>
+	.footer_function img{
+		width: 50px ;
+		height: 50px ;
+	}
+	.footer_function{
+		position: fixed;
+		bottom: 50px ;
+		background-color: #43c93a ;
+		border-radius: 50%;
+	}
+	.home{
+		left: 50px ;
+	}
+	.logout{
+		right: 50px ;
+	}
+	</style>
+	<script type="text/javascript" src="/javascripts/jscookie.js"></script>
+	<script type="text/javascript" src="/javascripts/jquery.min.js"></script>
+	<a href="/dashboard">
+	  <div class="home footer_function">
+	    <img src="/images/home.png"/>
+	  </div>
+	</a>
+
+	<div class="logout footer_function" id="logout">
+	  <img src="/images/logout.png" />
+	</div>
+
+	<script>
+	  $('#logout').click(function(e){
+	    Cookies.remove('token') ;
+	    Cookies.remove('username') ;
+	    location.href = '/login' ;
+	  })
+	</script>
 </body>
 </html>
+
+<!--
+//dummy text
+
+.home{
+	position: fixed ;
+	background-color: rgba(128,128,128,0.6);
+	left:100px;
+	bottom: 50px ;
+	padding: 15px ;
+	border-radius: 50%;
+}
+.logout{
+	position: fixed ;
+	background-color: rgba(128,128,128,0.6);
+	right: 100px ;
+	bottom: 50px ;
+	padding: 15px ;
+	border-radius: 50%;
+}
+.home:hover,.logout:hover{
+	cursor: pointer;
+}
+.home img{
+	width: 40px ;
+	height: 40px ;
+}
+.logout img{
+	width: 40px ;
+	height: 40px ;
+}
+.home,.logout{
+	test-align:left;
+}
+-->

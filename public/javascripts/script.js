@@ -3,7 +3,7 @@ var $browse = $('.browse')
 var $create_board = $('.create-board')
 var $browse_board = $('.browse-board')
 var $submit = $('.submit')
-var $profiles = $('.profiles') 
+var $profiles = $('.profiles')
 var $profiles_board = $('.profiles-board')
 var invites_container = document.querySelector('.invites_container')
 var invites_applied = document.querySelector('.invites_applied')
@@ -365,7 +365,7 @@ function loadCreatedInvites(invites, user){
 			}
 			$.post('/add_data/accept_invite',{
 				userId:parent.getAttribute('user_id') ,
-				inviteId:parent.getAttribute('invite_id') 
+				inviteId:parent.getAttribute('invite_id')
 			}, function(response){
 				var status_of_response = response.success ;
 				var new_parent = parent.parentNode ;
@@ -398,7 +398,7 @@ function loadCreatedInvites(invites, user){
 			}
 			$.post('/add_data/reject_invite',{
 				userId:parent.getAttribute('user_id') ,
-				inviteId:parent.getAttribute('invite_id') 
+				inviteId:parent.getAttribute('invite_id')
 			}, function(response){
 				var status_of_response = response.success ;
 				var new_parent = parent.parentNode ;
@@ -419,5 +419,39 @@ function loadCreatedInvites(invites, user){
 		}
 	}
 }
-	
-	
+
+
+// Live username search
+var usernames_container = document.getElementById('usernames_container') ;
+
+var username_for_search = document.getElementById('username_for_search') ;
+username_for_search.onkeyup = function(){
+	var username = username_for_search.value ;
+	$.get('/get_data/suggest_usernames/'+username,function(response){
+		if(response.success){
+			var usernames = response.usernames ;
+			usernames_container.innerHTML = '' ;
+			for(username of usernames){
+				var a = document.createElement('a') ;
+				var p = document.createElement('p') ;
+				a.setAttribute('class', 'username_suggestion') ;
+				a.setAttribute('href','/'+username) ;
+				a.setAttribute('target','_blank') ;
+				p.innerHTML = username ;
+				a.appendChild(p) ;
+				usernames_container.appendChild(a) ;
+				a.onclick = function(){
+					 usernames_container.innerHTML = '' ;
+				}
+			}
+
+		}else{
+
+		}
+	})
+}
+
+//search button
+$('.search_user').click(function(){
+	document.href = '/'+$('.username_for_search').val() ;
+})

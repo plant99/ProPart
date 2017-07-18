@@ -4,7 +4,7 @@ body{
     text-align: center ;
     background-image: url('/images/bg1.jpg');
     background-size: 100% 100% ;
-    background-attachment: fixed; 
+    background-attachment: fixed;
   }
  .tab{
   font-size: 20px ;
@@ -17,7 +17,7 @@ body{
   border-radius: 10% ;
 }
 .tab:hover{
-  cursor: pointer; 
+  cursor: pointer;
   color: cyan ;
   transition-duration: 0.5s ;
 }
@@ -26,7 +26,7 @@ body{
 }
 
 .dummy{
-	clear: both; 
+	clear: both;
 }
 .browse-board{
 	display: none ;
@@ -78,7 +78,7 @@ textarea{
 .invite img{
   width: 60px ;
   height: 60px ;
-  border-radius: 50% ;  
+  border-radius: 50% ;
 }
 .profiles-board{
   display: none ;
@@ -110,7 +110,7 @@ span{
   font-size: 25px ;
 }
 .invites_applied{
-  border: 1px solid grey; 
+  border: 1px solid grey;
   padding: 20px ;
   width: 50%;
   margin-left: 25% ;
@@ -163,14 +163,14 @@ span{
 }
 
 .invites_created{
-  border: 1px solid grey; 
+  border: 1px solid grey;
   padding: 20px ;
   width: 50%;
   margin-left: 25% ;
   margin-bottom: 20px ;
 }
 .applicant{
-  text-align: left; 
+  text-align: left;
 }
 .name_of_applicant{
   margin-left: 10%;
@@ -180,7 +180,7 @@ span{
   color: cyan ;
 }
 .name_of_applicant:hover{
-  text-decoration: none; 
+  text-decoration: none;
   color: cyan ;
   border-radius: 5px ;
   background-color: rgba(120,120,120,0.9);
@@ -213,7 +213,7 @@ span{
 }
 .add_applicant:hover{
   cursor: pointer;
-} 
+}
 .dummy1{
   width: 500px ;
   height: 20px ;
@@ -225,7 +225,7 @@ span{
   font-size: 20px;
 }
 .inviteCreated h3{
-  color: cyan; 
+  color: cyan;
 }
 .approved_user_link{
   display: block;
@@ -240,6 +240,47 @@ span{
 }
 .approved_user_link:hover{
   cursor: pointer;
-  color: cyan ; 
+  color: cyan ;
   text-decoration: none ;
+}
+.search_board{
+  padding: 20px ;
+  border:1px solid grey ;
+  width: 20% ;
+  position: fixed;
+  top:30px ;
+  right: 20px ;
+}
+.search_users{
+  padding: 5px;
+  padding-left: 10px ;
+  padding-right: 10px ;
+  border-radius:3px ;
+}
+.search_users:hover{
+  cursor: pointer;
+}
+.search_users img{
+  width: 20px ;
+  height: 20px ;
+}
+#username_for_search{
+  width: 80%;
+  float: left;
+}
+.username_suggestion{
+  padding: 15px ;
+  background-color: rgba(128,128,128,0.6) ;
+  text-decoration: none ;
+  color: white ;
+  font-size: 22px ;
+  display: block;
+}
+.username_suggestion:hover{
+  color: violet ;
+  text-decoration: none ;
+}
+
+.username_suggestion:visited{
+  color:white ;
 }

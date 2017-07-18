@@ -18,7 +18,7 @@ router.get('/:category',function(req, res, next){
 router.get('/user_applied_invites/:id', function(req, res, next){
 	var applied_invites_to_be_sent = [] ;
 	User.findOne({_id: req.params.id}, function(err, user){
-		var applied_invites = user.applied_invitations ;		
+		var applied_invites = user.applied_invitations ;
 		var index = 0;
 		for(var i=0 ;i< applied_invites.length ;i++){
 			Invite.findOne({_id: applied_invites[i].id}, function(err, invite){
@@ -50,5 +50,39 @@ router.get('/user_created_invites/:id', function(req, res, next){
 			}
 		}
 	})
+})
+router.get('/suggest_usernames/:userName', function(req, res, next){
+	var username = req.params.userName ;
+	var suggested_usernames = [];
+	var usernames = [], usernames_to_be_sent = [] ;
+	User.find({},{username:1,_id:0}, function(err, data){
+		console.log(username,'what bro')
+		var string_length = username.length;
+		if(err) console.log(err) ;
+		if(data){
+			for(user of data){
+				usernames.push(user.username) ;
+			}
+			usernames = usernames.sort() ;
+			for(username_tbc of usernames){
+				if(username_tbc.slice(0,string_length) === username){
+					usernames_to_be_sent.push(username_tbc) ;
+				}else{
+					console.log(username_tbc.slice(0,string_length)) ;
+				}
+			}
+			console.log(usernames_to_be_sent)
+			if(usernames_to_be_sent.length >=5){
+				usernames_to_be_sent = usernames_to_be_sent.splice(0,5) ;
+			}
+			if(usernames_to_be_sent.length){
+				res.json({success:true, usernames:usernames_to_be_sent}) ;
+			}else{
+				res.json({success:false})
+			}
+		}
+	})
+
+
 })
 module.exports = router ;
