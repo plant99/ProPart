@@ -233,12 +233,15 @@ function loadAppliedInvites(invites, user){
 					if(color === 'red'){
 						status.style.backgroundColor = '#d8401a'
 						status.style.color = '#f4fcf2' ;
+						status.innerHTML = 'REJECTED' ;
 					}else if(color === 'green'){
 						status.style.backgroundColor = '#1ad849' ;
 						status.style.color = '#f4fcf2' ;
+						status.innerHTML = 'SELECTED' ;
 					}else{
 						status.style.backgroundColor = '#e7f47f' ;
 						status.style.color = '#ea4f5a' ;
+						status.innerHTML = 'WAIT' ;
 					}
 					//status.style.backgroundColor = applicants[j].status.color ;
 					message.innerHTML = applicants[j].status.message ;
@@ -318,6 +321,7 @@ function loadCreatedInvites(invites, user){
 				}
 				applicant_counter_for_single_invite = 0;
 				var h3 = document.createElement('h3') ;
+				h3.setAttribute('class','approved_invitations_header') ;
 				h3.innerHTML = 'Approved applications' ;
 				inviteCreated.appendChild(h3) ;
 				for(var j=0;j< applicants.length; j++){
@@ -374,6 +378,21 @@ function loadCreatedInvites(invites, user){
 					new_parent.innerHTML = '' ;
 					p.innerHTML = 'User has been approved for the invite!'
 					new_parent.appendChild(p) ;
+					//auto update
+					var parent_of_new_parent = new_parent.parentNode ;
+					var a = document.createElement('a') ;
+					a.setAttribute('class','approved_user_link') ;
+					a.href = '/'+ parent.getAttribute('user_id') ;
+					a.innerHTML = parent.getAttribute('user_id') ;
+					var approved_header = findApprovedHeader(parent_of_new_parent) ;
+					if(approved_header.nextSibling.innerHTML == 'This invite doesn\'t have any approved applications pending!!'){
+						approved_header.nextSibling.innerHTML = '' ;
+						approved_header.appendChild(a) ;
+					}else{
+						approved_header.appendChild(a) ;
+						console.log(approved_header.nextSibling.innerHTML) ;
+					}
+					console.log(parent_of_new_parent) ;
 				}else{
 					console.log(status_of_response, 'behenchod')
 					p.innerHTML = 'Sorry, there was a trouble! Try again.' ;
@@ -455,3 +474,13 @@ username_for_search.onkeyup = function(){
 $('.search_user').click(function(){
 	document.href = '/'+$('.username_for_search').val() ;
 })
+
+function findApprovedHeader(parent){
+	var childNodes = parent.childNodes ;
+	for(var i=0;i<childNodes.length;i++){
+		if(childNodes[i].getAttribute('class') === 'approved_invitations_header'){
+			return childNodes[i] ;
+		}
+	}
+	return null;
+}
