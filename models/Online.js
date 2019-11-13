@@ -7,4 +7,6 @@ module.exports = mongoose.model('online', new Schema({
 		socket_id: String,
 		target: String
 	}]
+}, {
+	usePushEach: true
 }))

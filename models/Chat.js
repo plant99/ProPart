@@ -8,4 +8,6 @@ module.exports = mongoose.model('chat', new Schema({
 		message: String,
 		timestamp: Date
 	}]
+}, {
+	usePushEach: true
 }))

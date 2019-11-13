@@ -18,4 +18,6 @@ module.exports = mongoose.model('invite', new Schema({
 			message: String
 		}
 	}]
+}, {
+	usePushEach: true
 }))

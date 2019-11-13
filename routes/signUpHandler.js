@@ -1,6 +1,6 @@
 var express = require('express')
 var router = express.Router() ;
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcryptjs') ;
 var captchapng = require('captchapng')
 var request = require('request')
 router.post('/',function(req,res,next){
@@ -38,7 +38,7 @@ router.post('/',function(req,res,next){
 							
 						}
 					}
-					var bcrypt = require('bcrypt');
+					var bcrypt = require('bcryptjs');
 					const saltRounds = 10;
 					const myPlaintextPassword = req.body.password;
 					var body = req.body ;

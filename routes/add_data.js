@@ -41,22 +41,26 @@ router.post('/request_for_invite',function(req, res, next){
 			}else{
 				Invite.findOne({_id: id}, function(err, inviteFound){
 				if(err){
+					// console.log(err, 1)
 					res.json({success: false, message: 'Invite not found'})
 				}else{
+					
 					if(findIndexOf({username: user.username, id: user._id}, inviteFound.applicants) === -1){
 						inviteFound.applicants.push({username:user.username, id:user._id, status:{color: 'yellow', message:'Please wait for the user to evaluate your application.'}}) ;
 						User.findOne({username: user.username},function(err, user){
 							user.applied_invitations.push({id: id, status:{color: 'yellow', message:'Please wait for the user to evaluate your application.'}}) ;
-							user.save(function(err, savedUser){							if(!err){
+							user.save(function(err, savedUser){
+								if(!err){
 									inviteFound.save(function(err, savedInvite){
 										res.json({success: true, invite: savedInvite})
 									})
 								}else{
-
+									console.log(err)
 									res.json({success:false})
 								}
 							})
 						})
+						console.log(1)
 					}else{
 						res.json({success:false, message:'Already Applied'}) ;
 					}

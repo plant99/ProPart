@@ -21,4 +21,6 @@ module.exports = mongoose.model('user', new Schema({
 		username: String,
 		unread: Boolean
 	}]
+}, {
+	usePushEach: true
 }))

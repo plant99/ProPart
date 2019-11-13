@@ -1,7 +1,7 @@
 var express = require('express')
 var router = express.Router() ;
 var jwt = require('jsonwebtoken');
-var bcrypt = require('bcrypt') ;
+var bcrypt = require('bcryptjs') ;
 const saltRounds = 10;
 
 router.post('/',function(req,res,next){
