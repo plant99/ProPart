@@ -1,3 +1,4 @@
+<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 <style>
   .home{
     position: fixed ;
@@ -6,6 +7,8 @@
     bottom: 50px ;
     padding: 15px ;
     border-radius: 50%;
+    font-size:30px;
+    color:white;
   }
   .logout{
     position: fixed ;
@@ -14,29 +17,24 @@
     bottom: 50px ;
     padding: 15px ;
     border-radius: 50%;
+    font-size:30px;
+    color: white;
   }
   .home:hover,.logout:hover{
     cursor: pointer;
   }
-  .home img{
-    width: 40px ;
-    height: 40px ;
-  }
-  .logout img{
-    width: 40px ;
-    height: 40px ;
-  }
 </style>
+
 <script type="text/javascript" src="/javascripts/jscookie.js"></script>
 <script type="text/javascript" src="/javascripts/jquery.min.js"></script>
 <a href="/dashboard">
   <div class="home">
-    <img src="/images/home.png"/>
+    <i class="fa fa-home"></i>
   </div>
 </a>
 
 <div class="logout" id="logout">
-  <img src="/images/logout.png" />
+  <i class="fa fa-arrow-left"></i>
 </div>
 
 <script>
@@ -46,3 +44,4 @@
     location.href = '/login' ;
   })
 </script>
+
